@@ -265,6 +265,7 @@ jobs:
       - name: Run OWASP ZAP baseline scan
         run: |
           mkdir -p reports
+          chmod 777 reports
 
           docker run --rm \
             --network host \
@@ -272,8 +273,8 @@ jobs:
             ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py \
             -t http://127.0.0.1:3000 \
-            -J zap-report.json \
-            -r zap-report.html
+            -J /zap/wrk/zap-report.json \
+            -r /zap/wrk/zap-report.html
 
       - name: Upload ZAP reports
         if: always()
