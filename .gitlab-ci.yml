@@ -1,0 +1,20 @@
+stages:
+  - security
+
+gitleaks:
+  stage: security
+  image: zricethezav/gitleaks:latest
+  script:
+    - gitleaks detect --source=. --exit-code 1
+
+semgrep:
+  stage: security
+  image: semgrep/semgrep
+  script:
+    - semgrep scan --config=p/owasp-top-ten --error .
+
+trivy:
+  stage: security
+  image: aquasec/trivy:latest
+  script:
+    - trivy fs --scanners vuln --severity CRITICAL,HIGH --exit-code 1 --timeout 15m .
