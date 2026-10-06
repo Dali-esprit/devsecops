@@ -262,7 +262,7 @@ jobs:
           docker logs juice-shop
           exit 1
 
-         - name: Run OWASP ZAP baseline scan
+      - name: Run OWASP ZAP baseline scan
         run: |
           mkdir -p reports
           chmod 777 reports
