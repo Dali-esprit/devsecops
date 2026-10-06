@@ -39,6 +39,7 @@ jobs:
             zricethezav/gitleaks:latest \
             detect \
             --source=/src \
+            --config=/src/.gitleaks.toml \
             --report-format=json \
             --report-path=/src/reports/gitleaks.json \
             --exit-code 1
