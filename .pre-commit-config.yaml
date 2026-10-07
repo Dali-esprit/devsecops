@@ -1,0 +1,14 @@
+repos:
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: Gitleaks Secret Scan
+        entry: powershell -NoProfile -Command "docker run --rm -v ${PWD}:/src zricethezav/gitleaks:latest detect --source=/src --config=/src/.gitleaks.toml --exit-code 1"
+        language: system
+        pass_filenames: false
+
+      - id: semgrep
+        name: Semgrep Security Scan
+        entry: powershell -NoProfile -Command "docker run --rm -v ${PWD}:/src semgrep/semgrep semgrep scan --config p/owasp-top-ten /src/hardened-app"
+        language: system
+        pass_filenames: false
