@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 env:
-  APP_DIR: vulnerable-app
-  IMAGE_NAME: devsecops/juice-shop
+  APP_DIR: hardened-app
+  IMAGE_NAME: devsecops/hardened-app
 
 jobs:
 
@@ -157,13 +157,13 @@ jobs:
 
       - name: Save image
         run: |
-          docker save $IMAGE_NAME:ci -o juice-shop-image.tar
+          docker save $IMAGE_NAME:ci -o hardened-app-image.tar
 
       - name: Upload Docker image
         uses: actions/upload-artifact@v4
         with:
-          name: juice-shop-image
-          path: juice-shop-image.tar
+          name: hardened-app-image
+          path: hardened-app-image.tar
 
 
   # ============================================================
@@ -181,11 +181,11 @@ jobs:
       - name: Download Docker image
         uses: actions/download-artifact@v4
         with:
-          name: juice-shop-image
+          name: hardened-app-image
 
       - name: Load Docker image
         run: |
-          docker load -i juice-shop-image.tar
+          docker load -i hardened-app-image.tar
 
       - name: Generate image vulnerability report
         run: |
@@ -236,16 +236,16 @@ jobs:
       - name: Download Docker image
         uses: actions/download-artifact@v4
         with:
-          name: juice-shop-image
+          name: hardened-app-image
 
       - name: Load Docker image
         run: |
-          docker load -i juice-shop-image.tar
+          docker load -i hardened-app-image.tar
 
       - name: Start application
         run: |
           docker run -d \
-            --name juice-shop \
+            --name hardened-app \
             -p 3000:3000 \
             $IMAGE_NAME:ci
 
@@ -262,7 +262,7 @@ jobs:
           done
 
           echo "Application did not start."
-          docker logs juice-shop
+          docker logs hardened-app
           exit 1
 
       - name: Run OWASP ZAP baseline scan
@@ -289,5 +289,5 @@ jobs:
       - name: Stop application
         if: always()
         run: |
-          docker rm -f juice-shop || true
+          docker rm -f hardened-app || true
 
