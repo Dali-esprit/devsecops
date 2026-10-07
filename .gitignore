@@ -25,3 +25,5 @@ coverage/
 
 # Docker
 docker-compose.override.yml
+
+# DevSecOps pipeline verification
