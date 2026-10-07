@@ -12,3 +12,9 @@ repos:
         entry: powershell -NoProfile -Command "docker run --rm -v ${PWD}:/src semgrep/semgrep semgrep scan --config p/owasp-top-ten /src/hardened-app"
         language: system
         pass_filenames: false
+
+      - id: eslint-security
+        name: ESLint Security
+        entry: powershell -NoProfile -Command "Set-Location hardened-app; npx.cmd eslint ."
+        language: system
+        pass_filenames: false
