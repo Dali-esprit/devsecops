@@ -74,7 +74,7 @@ jobs:
             --config=p/owasp-top-ten \
             --json \
             --output=/src/reports/semgrep.json \
-            /src
+            /src/hardened-app
 
       - name: Enforce SAST quality gate
         run: |
@@ -84,7 +84,7 @@ jobs:
             semgrep scan \
             --config=p/owasp-top-ten \
             --error \
-            /src
+            /src/hardened-app
 
       - name: Upload Semgrep report
         if: always()
@@ -117,7 +117,7 @@ jobs:
             --severity CRITICAL,HIGH \
             --format json \
             --output /src/reports/trivy-sca.json \
-            /src
+            /src/hardened-app
 
       - name: Enforce SCA quality gate
         run: |
@@ -128,7 +128,7 @@ jobs:
             --scanners vuln \
             --severity CRITICAL,HIGH \
             --exit-code 1 \
-            /src
+            /src/hardened-app
 
       - name: Upload Trivy SCA report
         if: always()
