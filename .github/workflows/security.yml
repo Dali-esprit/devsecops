@@ -1,4 +1,4 @@
-﻿name: DevSecOps Security Pipeline
+name: DevSecOps Security Pipeline
 
 on:
   push:
@@ -275,8 +275,8 @@ jobs:
             zap-baseline.py \
             -t http://127.0.0.1:3000 \
             -J zap-report.json \
-            -r zap-report.html
-
+            -r zap-report.html \
+            -I
       - name: Upload ZAP reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -288,3 +288,4 @@ jobs:
         if: always()
         run: |
           docker rm -f juice-shop || true
+
