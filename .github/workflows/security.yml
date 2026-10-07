@@ -291,3 +291,26 @@ jobs:
         run: |
           docker rm -f hardened-app || true
 
+  notify_slack:
+    name: Notify Slack
+    if: ${{ always() && (needs.secrets_scan.result == 'failure' || needs.sast.result == 'failure' || needs.sca.result == 'failure' || needs.docker_build.result == 'failure' || needs.docker_scan.result == 'failure' || needs.dast.result == 'failure') }}
+    needs:
+      - secrets_scan
+      - sast
+      - sca
+      - docker_build
+      - docker_scan
+      - dast
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Slack notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          MESSAGE="[SECURITY] DevSecOps pipeline FAILED in ${GITHUB_REPOSITORY} on ${GITHUB_REF_NAME}. Run: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            --data "{\"text\":\"${MESSAGE}\"}" \
+            "$SLACK_WEBHOOK_URL"
