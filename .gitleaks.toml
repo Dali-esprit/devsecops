@@ -1,0 +1,19 @@
+title = "DevSecOps Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Intentional OWASP Juice Shop vulnerable training data"
+
+paths = [
+  '''^vulnerable-app/data/static/users\.yml$''',
+  '''^vulnerable-app/frontend/src/app/.*\.spec\.ts$''',
+  '''^vulnerable-app/frontend/src/app/faucet/faucet\.component\.ts$''',
+  '''^vulnerable-app/test/.*\.test\.ts$''',
+  '''^vulnerable-app/test/cypress/.*\.spec\.ts$''',
+  '''^vulnerable-app/lib/insecurity\.ts$''',
+  '''^vulnerable-app/routes/login\.ts$''',
+  '''^vulnerable-app/infrastructure/terraform/networking\.tf$''',
+  '''^vulnerable-app/terraform/networking\.tf$'''
+]
