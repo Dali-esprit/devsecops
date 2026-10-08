@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: gitleaks
         name: Gitleaks Secret Scan
-        entry: powershell -NoProfile -Command "docker run --rm -v ${PWD}:/src zricethezav/gitleaks:latest detect --source=/src --config=/src/.gitleaks.toml --exit-code 1"
+        entry: powershell -NoProfile -Command "$staged = Join-Path $env:TEMP 'gitleaks-staged'; Remove-Item $staged -Recurse -Force -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path $staged | Out-Null; git diff --cached --name-only --diff-filter=ACMR | ForEach-Object { $dest = Join-Path $staged $_; $dir = Split-Path $dest -Parent; New-Item -ItemType Directory -Path $dir -Force | Out-Null; git show (':'+$_) | Set-Content -NoNewline $dest }; docker run --rm -v ('{0}:/src/staged' -f $staged) -v ('{0}/.gitleaks.toml:/src/.gitleaks.toml' -f (Get-Location)) zricethezav/gitleaks:latest dir /src/staged --config=/src/.gitleaks.toml --exit-code 1"
         language: system
         pass_filenames: false
 
