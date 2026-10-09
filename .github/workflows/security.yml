@@ -258,6 +258,40 @@ jobs:
             -r zap-report.html \
             -I
 
+
+      - name: Enforce DAST security threshold
+        run: |
+          set -euo pipefail
+
+          REPORT="reports/zap-report.json"
+
+          if [ ! -s "$REPORT" ]; then
+            echo "::error::ZAP JSON report is missing or empty."
+            exit 1
+          fi
+
+          BLOCKING_COUNT=$(jq '
+            [
+              .site[]?.alerts[]?
+              | select((.riskcode | tonumber) >= 2)
+            ] | length
+          ' "$REPORT")
+
+          echo "High and Medium alerts: $BLOCKING_COUNT"
+
+          if [ "$BLOCKING_COUNT" -gt 0 ]; then
+            jq -r '
+              .site[]?.alerts[]?
+              | select((.riskcode | tonumber) >= 2)
+              | "Risk=\(.riskdesc // .riskcode); Alert=\(.name)"
+            ' "$REPORT"
+
+            echo "::error::DAST gate failed: High or Medium alerts found."
+            exit 1
+          fi
+
+          echo "DAST gate passed: no High or Medium alerts."
+
       - name: Upload ZAP reports
         if: always()
         uses: actions/upload-artifact@v4
